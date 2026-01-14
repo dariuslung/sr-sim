@@ -47,7 +47,7 @@ class StaticSR:
                 step_gpu_latencies.append(self.gpu_latency[i])
                 step_link_latencies.append(self.link_latency[i])
                 if self.print_steps:
-                    print(f"GPU {sender.name} sends {data_to_send} to GPU {receiver.name}")
+                    print(f"GPU {sender.name} -> GPU {receiver.name} : Chunk {chunk_idx}")
 
             step_gpu_latency = max(step_gpu_latencies)
             step_link_latency = max(step_link_latencies)
@@ -101,7 +101,7 @@ class RandSRAp1:
                 chunk_idx = (i - step) % self.num_gpu
                 if chunk_idx in skip_indices[i]:
                     if self.print_steps:
-                        print(f"GPU {sender.name} IDLE")
+                        print(f"GPU {sender.name} -> IDLE (Skipping Chunk {chunk_idx})")
                     continue # GPU idle during this step
                 data_to_send = sender.data[chunk_idx]
                 receiver.buffer[chunk_idx] = data_to_send
@@ -109,7 +109,7 @@ class RandSRAp1:
                 step_gpu_latencies.append(self.gpu_latency[i])
                 step_link_latencies.append(self.link_latency[i])
                 if self.print_steps:
-                    print(f"GPU {sender.name} sends {data_to_send} to GPU {receiver.name}")
+                    print(f"GPU {sender.name} -> GPU {receiver.name} : Chunk {chunk_idx}")
             
             # After all sends, update receiver data from buffer
             for i in range(self.num_gpu):
@@ -177,7 +177,7 @@ class RandSRAp2:
                 step_gpu_latencies.append(self.gpu_latency[i])
                 step_link_latencies.append(self.link_latency[i])
                 if self.print_steps:
-                    print(f"GPU {sender.name} sends {data_to_send} to GPU {receiver.name}")
+                    print(f"GPU {sender.name} -> GPU {receiver.name} : Chunk {chunk_idx}")
             
             # After all sends, update receiver data from buffer
             for i in range(self.num_gpu):
