@@ -1,38 +1,34 @@
-# Custom SkipReduce Simulation
+# SkipReduce Simulation
 
-This repository contains a Python simulation of a Ring AllReduce communication algorithm across multiple GPUs. The simulation explores different strategies for skipping chunk transfers and reductions to evaluate the impact on total latency and accuracy penalties.
+This repository contains a simplified Python simulation of a Ring AllReduce communication algorithm across multiple GPUs. This specific version focuses exclusively on a static configuration.
 
 ## Features
 
-The simulation implements three different operational modes:
-
-- **Static Mode**: Executes the Ring AllReduce with fixed skip and shift values. Skips occur in consistent strides, and the operation completes in a predetermined number of steps.
-- **Random Mode**: Each GPU randomly selects a specified number of chunks to skip during the reduction steps. If a chunk is skipped, the GPU remains idle for that computation, bypassing the reduction step.
-- **Exhaustive Mode**: Performs an exhaustive search to find the optimal skip configuration. It evaluates all possible skip combinations up to a maximum limit per GPU. The optimal configuration is determined by minimizing a cost function that balances total communication/computation latency against a penalty factor based on the importance weights of the skipped chunks.
+- **Static Execution**: Runs the Ring AllReduce process with fixed skip and shift values, reducing the total number of communication steps based on the configured skip count.
+- **Latency Tracking**: Calculates step-by-step latency by evaluating the maximum GPU compute latency and network link latency occurring in parallel during each step.
+- **State Monitoring**: Tracks and optionally prints the state of data chunks residing on each GPU throughout the simulation.
 
 ## Requirements
 
 - Python 3.x
-- Standard library modules only (`random`, `itertools`). No external dependencies are required.
+- Standard Python libraries only. No external dependencies are required.
 
 ## Usage
 
-1. Open `main.py` and navigate to the `if __name__ == "__main__":` block at the bottom of the file.
-2. Configure the simulation parameters such as the number of GPUs (`num_gpu`), latency profiles (`gpu_latency`, `link_latency`), and the desired mode (`mode`).
-3. Uncomment the desired mode: `"static"`, `"random"`, or `"exhaustive"`.
-4. Run the script from your terminal:
+1. Open the Python script and locate the `if __name__ == "__main__":` block at the bottom.
+2. Modify the configuration variables to match your desired simulation environment.
+3. Run the script from your terminal:
 
 
 ```bash
-python main.py
+python script.py
 ```
 
-### Configuration Parameters
+## Configuration Parameters
 
-- `num_gpu`: Total number of GPUs in the ring.
-- `gpu_latency`: A list representing the computation latency for each GPU.
-- `link_latency`: A list representing the network transfer latency from each GPU to its neighbor.
-- `skip`: Number of chunks to skip (used in Static and Random modes).
-- `importance_weights`: A list defining the penalty weight of each chunk (used in Exhaustive mode).
-- `penalty_factor`: A scalar multiplier that converts the importance weight penalty into latency equivalents (used in Exhaustive mode).
-- `print_steps`: Set to `True` to output a detailed trace of the simulation step-by-step.
+- **num_gpu**: The total number of GPUs in the simulated ring.
+- **gpu_latency**: A list containing the computation latency penalty for each respective GPU.
+- **link_latency**: A list containing the network transfer latency penalty for each respective GPU sending data to its neighbor.
+- **skip**: The number of steps to truncate from the end of the standard Ring AllReduce sequence.
+- **shift**: The index shift applied to determine which initial data chunk each GPU sends first.
+- **print_steps**: A boolean flag. Set to `True` to output a detailed trace of the simulation, or `False` to only see the final state and total latency.
