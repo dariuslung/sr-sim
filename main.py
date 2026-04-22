@@ -39,6 +39,7 @@ class StaticMode:
                 # Simulate sending data
                 chunk_idx = (i + self.shift - step) % self.num_gpu
                 data_to_send = sender.data[chunk_idx]
+                # In real memory, this data is retained until overwritten, but for simulation this is for clarity
                 sender.data[chunk_idx] = None
                 receiver.data[chunk_idx] += data_to_send
                 # Record latencies

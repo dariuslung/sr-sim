@@ -21,7 +21,7 @@ This repository contains a simplified Python simulation of a Ring AllReduce comm
 
 
 ```bash
-python script.py
+python main.py
 ```
 
 ## Configuration Parameters
